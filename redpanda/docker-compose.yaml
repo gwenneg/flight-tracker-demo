@@ -1,0 +1,31 @@
+# From https://docs.redpanda.com/docs/21.11/quickstart/quick-start-docker/#bring-up-a-docker-compose-file
+version: '3.7'
+services:
+  redpanda:
+    # NOTE: Please use the latest version here!
+    image: docker.redpanda.com/vectorized/redpanda:v21.11.15
+    container_name: redpanda-1
+    command:
+      - redpanda
+      - start
+      - --smp
+      - '1'
+      - --reserve-memory
+      - 0M
+      - --overprovisioned
+      - --node-id
+      - '0'
+      - --kafka-addr
+      - PLAINTEXT://0.0.0.0:29092,OUTSIDE://0.0.0.0:9092
+      - --advertise-kafka-addr
+      - PLAINTEXT://redpanda:29092,OUTSIDE://localhost:9092
+      - --pandaproxy-addr
+      - PLAINTEXT://0.0.0.0:28082,OUTSIDE://0.0.0.0:8082
+      - --advertise-pandaproxy-addr
+      - PLAINTEXT://redpanda:28082,OUTSIDE://localhost:8082
+    ports:
+      - 8081:8081
+      - 8082:8082
+      - 9092:9092
+      - 28082:28082
+      - 29092:29092
