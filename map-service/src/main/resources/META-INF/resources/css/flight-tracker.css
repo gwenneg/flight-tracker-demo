@@ -1,0 +1,126 @@
+@font-face {
+    font-family: 'Open Sans';
+    src: url('../fonts/OpenSans-Regular.ttf'), url('../fonts/OpenSans-Bold.ttf');
+}
+html {
+    font-family: 'Open Sans';
+}
+body {
+    margin: 0;
+}
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #151515;
+    color: #eeeeee;
+    font-size: 18px;
+}
+header a {
+    font-weight: bold;
+}
+header a:link, header a:hover, header a:active, header a:visited {
+    color: #eeeeee;
+    text-decoration: none;
+}
+#title {
+    text-transform: uppercase;
+    font-size: 20px;
+}
+#powered img {
+    vertical-align: middle;
+}
+#main {
+    display: flex;
+}
+#map {
+    position: relative;
+}
+#aircraft-pattern {
+    display: none;
+}
+.aircraft {
+    position: absolute;
+    display: none;
+    width: 50px;
+}
+.aircraft img {
+    width: 40px;
+    height: 40px;
+    position: relative;
+    left: 8px;
+}
+.registration {
+    position: relative;
+    top: -4px;
+    text-align: center;
+    font-size: 10px;
+    font-weight: bold;
+    color: #e74c3c;
+}
+#right {
+    padding: 25px;
+    flex-grow: 1
+}
+#error {
+    display: none;
+    color: #ff0000;
+    margin-bottom: 25px;
+}
+#options {
+    margin-bottom: 25px;
+    font-weight: bold;
+}
+#options input[type='checkbox'], #options label {
+    cursor: pointer;
+}
+#form {
+    display: none;
+    margin-bottom: 25px;
+}
+#form li {
+    margin-bottom: 10px;
+}
+#form li label {
+    display: inline-block;
+    font-weight: bold;
+    width: 175px;
+}
+#form input[type='text'] {
+    padding: 8px;
+    width: 120px;
+}
+#form select {
+    padding: 8px;
+    position: relative;
+    left: -4px;
+    width: 140px;
+}
+#form input[type='button'] {
+    padding: 8px 20px 8px 20px;
+    text-transform: uppercase;
+    font-weight: bold;
+    border: 2px solid #e74c3c;
+    background-color: #f3e1df;
+    border-radius: 5px;
+    cursor: pointer;
+}
+#start {
+    margin-top: 25px;
+}
+#log {
+    height: 250px;
+    max-height: 250px;
+    padding: 10px;
+    overflow-y: auto;
+    display: none;
+    font-size: 14px;
+    background-color: #151515;
+    color: #eeeeee;
+}
