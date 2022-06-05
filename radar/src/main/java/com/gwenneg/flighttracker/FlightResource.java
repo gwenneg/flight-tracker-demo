@@ -51,7 +51,7 @@ public class FlightResource {
                 landed.add(movingAircraft.getAircraft());
             }
 
-            RadarData data = new RadarData(movingAircraft.getAircraft(), movingAircraft.getCurrentPoint().getX(), movingAircraft.getCurrentPoint().getY(), movingAircraft.getHeading(), movingAircraft.isLanded());
+            RadarData data = buildRadarData(movingAircraft);
             try {
                 emitter.send(objectMapper.writeValueAsString(data));
             } catch (JsonProcessingException e) {
@@ -62,5 +62,15 @@ public class FlightResource {
         for (String aircraft :landed) {
             movingAircrafts.remove(aircraft);
         }
+    }
+
+    private static RadarData buildRadarData(FlightEngine flightEngine) {
+        RadarData data = new RadarData();
+        data.setAircraftIdentification(flightEngine.getAircraft());
+        data.setX(flightEngine.getCurrentPoint().getX());
+        data.setY(flightEngine.getCurrentPoint().getY());
+        data.setTrackAngle(flightEngine.getHeading());
+        data.setLanded(flightEngine.isLanded());
+        return data;
     }
 }

@@ -35,14 +35,14 @@ public class TopologyProducer {
                 .stream(ADSB_TOPIC, Consumed.with(Serdes.String(), new ObjectMapperSerde<>(TransponderData.class)))
                 .map((key, value) -> {
                     Output output = Output.fromAdsbFlight(value);
-                    return new KeyValue<>(value.getAircraft(), output);
+                    return new KeyValue<>(output.getAircraft(), output);
                 });
 
         KStream<String, Output> radar = builder
                 .stream(RADAR_TOPIC, Consumed.with(Serdes.String(), new ObjectMapperSerde<>(RadarData.class)))
                 .map((key, value) -> {
                     Output output = Output.fromRadarFlight(value);
-                    return new KeyValue<>(value.getAircraft(), output);
+                    return new KeyValue<>(output.getAircraft(), output);
                 });
 
         adsb.merge(radar)

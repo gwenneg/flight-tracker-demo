@@ -1,17 +1,18 @@
 package com.gwenneg.flighttracker;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
-@AllArgsConstructor
 @Getter
+@Setter
 @ToString
 public class RadarData {
 
-    private String aircraft;
+    private String aircraftIdentification;
     private double x;
     private double y;
-    private double heading;
+    private double trackAngle;
+    private String radarType;
     private boolean landed;
 }

@@ -1,17 +1,19 @@
 package com.gwenneg.flighttracker;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
-@AllArgsConstructor
+import java.util.Map;
+
 @Getter
+@Setter
 @ToString
 public class TransponderData {
 
-    private String aircraft;
-    private double x;
-    private double y;
-    private double heading;
+    private String identification;
+    private Map<String, Double> position;
+    private double trackAngle;
+    private double groundSpeed;
     private boolean landed;
 }

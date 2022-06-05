@@ -75,7 +75,7 @@ let connect = () => {
                 top: position.y - 20 // Half of the image height
             });
             aircraft.children('img').css({
-                transform: 'rotate(' + (position.heading - 90) + 'deg)'
+                transform: 'rotate(' + (position.trackAngle - 90) + 'deg)'
             })
             aircraft.show();
         }
