@@ -12,5 +12,5 @@ public class PointToPointFlight {
     private Point departure;
     private Point arrival;
     private String aircraft;
-    private double speed;
+    private Double speed;
 }

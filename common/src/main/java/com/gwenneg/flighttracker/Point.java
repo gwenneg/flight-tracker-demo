@@ -9,6 +9,6 @@ import lombok.ToString;
 @ToString
 public class Point {
 
-    private double x;
-    private double y;
+    private Double x;
+    private Double y;
 }

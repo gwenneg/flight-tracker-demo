@@ -10,9 +10,9 @@ import lombok.ToString;
 public class RadarData {
 
     private String aircraftIdentification;
-    private double x;
-    private double y;
-    private double trackAngle;
+    private Double x;
+    private Double y;
+    private Double trackAngle;
     private String radarType;
-    private boolean landed;
+    private Boolean landed;
 }

@@ -13,7 +13,7 @@ public class TransponderData {
 
     private String identification;
     private Map<String, Double> position;
-    private double trackAngle;
-    private double groundSpeed;
-    private boolean landed;
+    private Double trackAngle;
+    private Double groundSpeed;
+    private Boolean landed;
 }
