@@ -25,7 +25,7 @@ public class FlightResource {
     ObjectMapper objectMapper;
 
     @Inject
-    @Channel("radar")
+    @Channel("radar-data")
     Emitter<String> emitter;
 
     private final Map<String, FlightEngine> movingAircrafts = new ConcurrentHashMap<>();

@@ -25,7 +25,7 @@ public class FlightResource {
     ObjectMapper objectMapper;
 
     @Inject
-    @Channel("ads-b")
+    @Channel("transponder-data")
     Emitter<String> emitter;
 
     private final Map<String, FlightEngine> movingAircrafts = new ConcurrentHashMap<>();
