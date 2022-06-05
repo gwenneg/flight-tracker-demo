@@ -9,9 +9,9 @@
   <modules>
     <module>aggregator</module>
     <module>common</module>
-    <module>data-sources/ads-b</module>
-    <module>data-sources/radar</module>
     <module>map-service</module>
+    <module>radar</module>
+    <module>transponder</module>
   </modules>
   <properties>
     <compiler-plugin.version>3.8.1</compiler-plugin.version>
