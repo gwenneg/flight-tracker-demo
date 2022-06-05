@@ -44,10 +44,10 @@ public class FlightResource {
                                 PointToPointFlight p2pFlight = new PointToPointFlight(departurePoint, arrivalPoint, flight.getAircraft(), flight.getSpeed());
 
                                 switch (flight.getSource()) {
-                                    case "ads-b":
-                                        return adsbSourceClient.startFlight(p2pFlight);
                                     case "radar":
                                         return radarSourceClient.startFlight(p2pFlight);
+                                    case "transponder":
+                                        return adsbSourceClient.startFlight(p2pFlight);
                                     default:
                                         throw new BadRequestException("Unexpected source: " + flight.getSource());
                                 }

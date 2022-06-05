@@ -28,7 +28,7 @@ public class FlightResource {
     @Channel("transponder-data")
     Emitter<String> emitter;
 
-    private final Map<String, FlightEngine> movingAircrafts = new ConcurrentHashMap<>();
+    private final Map<String, FlightDataSimulator> movingAircrafts = new ConcurrentHashMap<>();
 
     @PUT
     @Consumes(APPLICATION_JSON)
@@ -36,26 +36,24 @@ public class FlightResource {
         if (movingAircrafts.containsKey(flight)) {
             throw new BadRequestException("Aircraft is already flying");
         }
-        FlightEngine movingAircraft = new FlightEngine(flight.getDeparture(), flight.getArrival(), flight.getAircraft(), flight.getSpeed());
+        FlightDataSimulator movingAircraft = new FlightDataSimulator(flight.getDeparture(), flight.getArrival(), flight.getSpeed());
         movingAircrafts.put(flight.getAircraft(), movingAircraft);
     }
 
     @Scheduled(every = "PT1S")
     void updateFlightPositions() {
         List<String> landed = new ArrayList<>();
-        for (FlightEngine movingAircraft : movingAircrafts.values()) {
-            movingAircraft.getAircraft();
-            movingAircraft.getCurrentPoint();
+        for (Map.Entry<String, FlightDataSimulator> movingAircraft : movingAircrafts.entrySet()) {
 
-            if (movingAircraft.isLanded()) {
-                landed.add(movingAircraft.getAircraft());
+            if (movingAircraft.getValue().isLanded()) {
+                landed.add(movingAircraft.getKey());
             }
 
-            TransponderData data = buildRadarData(movingAircraft);
+            TransponderData data = buildRadarData(movingAircraft.getKey(), movingAircraft.getValue());
             try {
                 emitter.send(objectMapper.writeValueAsString(data));
             } catch (JsonProcessingException e) {
-                e.printStackTrace();
+                throw new RuntimeException("Transponder data serialization failed", e);
             }
 
         }
@@ -64,15 +62,15 @@ public class FlightResource {
         }
     }
 
-    private static TransponderData buildRadarData(FlightEngine flightEngine) {
+    private static TransponderData buildRadarData(String aircraft, FlightDataSimulator flightDataSimulator) {
         TransponderData data = new TransponderData();
-        data.setIdentification(flightEngine.getAircraft());
+        data.setIdentification(aircraft);
         data.setPosition(Map.of(
-                "x", flightEngine.getCurrentPoint().getX(),
-                "y", flightEngine.getCurrentPoint().getY()
+                "x", flightDataSimulator.getPosition().getX(),
+                "y", flightDataSimulator.getPosition().getY()
         ));
-        data.setTrackAngle(flightEngine.getHeading());
-        data.setLanded(flightEngine.isLanded());
+        data.setTrackAngle(flightDataSimulator.getTrackAngle());
+        data.setLanded(flightDataSimulator.isLanded());
         return data;
     }
 }

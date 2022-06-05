@@ -94,13 +94,13 @@ header a:link, header a:hover, header a:active, header a:visited {
 }
 #form input[type='text'] {
     padding: 8px;
-    width: 120px;
+    width: 130px;
 }
 #form select {
     padding: 8px;
     position: relative;
     left: -4px;
-    width: 140px;
+    width: 150px;
 }
 #form input[type='button'] {
     padding: 8px 20px 8px 20px;
