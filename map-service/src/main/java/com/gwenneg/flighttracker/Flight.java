@@ -15,7 +15,7 @@ public class Flight {
     private String aircraft;
 
     @NotNull
-    private Long speed;
+    private Double speed;
 
     @NotNull
     private String departure;

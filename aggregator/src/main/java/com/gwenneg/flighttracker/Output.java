@@ -36,7 +36,7 @@ public class Output {
         output.setX(flight.getPosition().get("x"));
         output.setY(flight.getPosition().get("y"));
         output.setTrackAngle(flight.getTrackAngle());
-        output.setLanded(flight.isLanded());
+        output.setLanded(flight.getLanded());
         return output;
 
 
@@ -50,7 +50,7 @@ public class Output {
         output.setX(flight.getX());
         output.setY(flight.getY());
         output.setTrackAngle(flight.getTrackAngle());
-        output.setLanded(flight.isLanded());
+        output.setLanded(flight.getLanded());
         return output;
 
 
