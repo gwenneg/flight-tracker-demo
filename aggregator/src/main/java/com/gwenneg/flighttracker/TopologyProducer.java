@@ -17,64 +17,48 @@ import org.apache.kafka.streams.kstream.TimeWindows;
 
 import java.time.Duration;
 
-import static com.gwenneg.flighttracker.FlightSource.ADSB;
+import static com.gwenneg.flighttracker.FlightData.TRANSPONDER_SOURCE;
 import static org.apache.kafka.streams.kstream.Suppressed.BufferConfig.unbounded;
 
 @ApplicationScoped
 public class TopologyProducer {
 
-    public static final String ADSB_TOPIC = "ads-b";
-    public static final String RADAR_TOPIC = "radar";
-    public static final String TEMPERATURES_AGGREGATED_TOPIC = "temperatures-aggregated";
+    public static final String RADAR_DATA_TOPIC = "radar-data";
+    public static final String TRANSPONDER_DATA_TOPIC = "transponder-data";
+    public static final String FLIGHT_DATA_TOPIC = "flight-data";
 
     @Produces
-    public Topology buildTopology() {
+    public Topology produceTopology() {
         StreamsBuilder builder = new StreamsBuilder();
 
-        KStream<String, Output> adsb = builder
-                .stream(ADSB_TOPIC, Consumed.with(Serdes.String(), new ObjectMapperSerde<>(TransponderData.class)))
+        KStream<String, FlightData> radar = builder
+                .stream(RADAR_DATA_TOPIC, Consumed.with(Serdes.String(), new ObjectMapperSerde<>(RadarData.class)))
                 .map((key, value) -> {
-                    Output output = Output.fromAdsbFlight(value);
-                    return new KeyValue<>(output.getAircraft(), output);
+                    FlightData flightData = FlightData.fromRadarData(value);
+                    return new KeyValue<>(flightData.getAircraft(), flightData);
                 });
 
-        KStream<String, Output> radar = builder
-                .stream(RADAR_TOPIC, Consumed.with(Serdes.String(), new ObjectMapperSerde<>(RadarData.class)))
+        KStream<String, FlightData> transponder = builder
+                .stream(TRANSPONDER_DATA_TOPIC, Consumed.with(Serdes.String(), new ObjectMapperSerde<>(TransponderData.class)))
                 .map((key, value) -> {
-                    Output output = Output.fromRadarFlight(value);
-                    return new KeyValue<>(output.getAircraft(), output);
+                    FlightData flightData = FlightData.fromTransponderData(value);
+                    return new KeyValue<>(flightData.getAircraft(), flightData);
                 });
 
-        adsb.merge(radar)
-                .groupByKey(Grouped.with(Serdes.String(), new ObjectMapperSerde<>(Output.class)))
+        radar.merge(transponder)
+                .groupByKey(Grouped.with(Serdes.String(), new ObjectMapperSerde<>(FlightData.class)))
                 .windowedBy(TimeWindows.ofSizeWithNoGrace(Duration.ofSeconds(1L)))
-                .reduce((old, neww) -> {
-
-
-
-
-
-
-                       /*
-    TODO
-
-
-    TODO déterminer ce qui fait qu'un event est le meilleur:
-     adsb > radar > l'autre truc?
-     timestamp fourni en input ? on garde le plus récent
-     distance du radar à l'aéronef
-     */
-
-
-                    if (old.getSource() == ADSB && neww.getSource() != ADSB) {
-                        return old;
+                .reduce((previousRecord, newRecord) -> {
+                    // Transponder data is more reliable than radar data.
+                    if (newRecord.getSource().equals(TRANSPONDER_SOURCE) || !previousRecord.getSource().equals(TRANSPONDER_SOURCE)) {
+                        return newRecord;
                     } else {
-                        return neww;
+                        return previousRecord;
                     }
                 })
                 .suppress(Suppressed.untilWindowCloses(unbounded()))
                 .toStream()
-                .to(TEMPERATURES_AGGREGATED_TOPIC);
+                .to(FLIGHT_DATA_TOPIC);
 
         return builder.build();
     }
