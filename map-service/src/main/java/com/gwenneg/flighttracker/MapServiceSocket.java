@@ -17,7 +17,7 @@ import javax.websocket.Session;
 @ApplicationScoped
 public class MapServiceSocket {
 
-    private static final String AIRCRAFT_POSITIONS_TOPIC = "aircraft-positions";
+    private static final String FLIGHT_DATA_TOPIC = "flight-data";
 
     private final Map<String, Session> sessions = new ConcurrentHashMap<>();
 
@@ -39,7 +39,7 @@ public class MapServiceSocket {
         Log.debugf("Session closed on error: %s", session.getId());
     }
 
-    @Incoming(AIRCRAFT_POSITIONS_TOPIC)
+    @Incoming(FLIGHT_DATA_TOPIC)
     public void broadcast(String aircraftPosition) {
         Log.debugf("Broadcasting aircraft position: %s", aircraftPosition);
         sessions.values().forEach(session -> {
