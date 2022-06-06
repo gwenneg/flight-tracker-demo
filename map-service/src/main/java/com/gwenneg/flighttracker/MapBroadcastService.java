@@ -13,11 +13,11 @@ import javax.websocket.OnOpen;
 import javax.websocket.server.ServerEndpoint;
 import javax.websocket.Session;
 
-@ServerEndpoint("/positions")
 @ApplicationScoped
-public class MapServiceSocket {
+@ServerEndpoint("/broadcast-service")
+public class MapBroadcastService {
 
-    private static final String FLIGHT_DATA_TOPIC = "flight-data";
+    public static final String FLIGHT_DATA_TOPIC = "flight-data";
 
     private final Map<String, Session> sessions = new ConcurrentHashMap<>();
 
@@ -36,16 +36,16 @@ public class MapServiceSocket {
     @OnError
     public void onError(Session session, Throwable throwable) {
         sessions.remove(session.getId());
-        Log.debugf("Session closed on error: %s", session.getId());
+        Log.debugf(throwable,"Session closed on error: %s", session.getId());
     }
 
     @Incoming(FLIGHT_DATA_TOPIC)
-    public void broadcast(String aircraftPosition) {
-        Log.debugf("Broadcasting aircraft position: %s", aircraftPosition);
+    public void broadcast(String flight) {
+        Log.debugf("Broadcasting flight position: %s", flight);
         sessions.values().forEach(session -> {
-            session.getAsyncRemote().sendObject(aircraftPosition, result ->  {
+            session.getAsyncRemote().sendObject(flight, result ->  {
                 if (result.getException() != null) {
-                    Log.error("Unable to send message", result.getException());
+                    Log.error("Unable to broadcast flight position", result.getException());
                 }
             });
         });

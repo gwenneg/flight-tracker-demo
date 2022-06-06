@@ -43,7 +43,7 @@ $('#show-form').change(() => {
     $('#form').toggle();
 });
 let connect = () => {
-    let socket = new WebSocket("ws://" + location.host + "/positions");
+    let socket = new WebSocket("ws://" + location.host + "/broadcast-service");
 
     socket.onopen = () => {
         console.log('Connected to the WebSocket');
