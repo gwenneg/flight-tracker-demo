@@ -7,6 +7,7 @@ import lombok.Setter;
 @Setter
 public class FlightData {
 
+    public static final String RADAR_SOURCE = "radar";
     public static final String TRANSPONDER_SOURCE = "transponder";
 
     private String source;
@@ -18,7 +19,7 @@ public class FlightData {
 
     public static FlightData fromRadarData(RadarData data) {
         FlightData flightData = new FlightData();
-        flightData.setSource("radar");
+        flightData.setSource(RADAR_SOURCE);
         flightData.setAircraft(data.getAircraftIdentification());
         flightData.setX(data.getX());
         flightData.setY(data.getY());
