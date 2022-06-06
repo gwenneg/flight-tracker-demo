@@ -1,0 +1,17 @@
+sudo alternatives --config java
+
+dans map-service, prévoir les dépendances DB reactive et pas reactive, passer de l'une à l'autre en live
+
+récup aiport:
+        // TO SAY Show imperative code (panache orm) then transform it into reactive
+
+        // TO SAY: never share a HR session between threads
+
+
+@CacheResult
+// explain what happens when Uni
+
+
+
+dans simulator, send return completionstage et on en fait rien mais c'est ok parce que le service tourne à l'infini
+

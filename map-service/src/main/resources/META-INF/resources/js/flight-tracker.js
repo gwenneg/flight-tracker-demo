@@ -59,7 +59,9 @@ let connect = () => {
             aircraft.fadeOut(400, () => aircraft.remove());
         } else {
 
+            let newAircraft = false;
             if (!aircraft.length) {
+                newAircraft = true;
                 console.error("creating aircraft" + position.aircraft);
                 // It is added to the map.
                 aircraft = $('#aircraft-pattern')
@@ -70,14 +72,21 @@ let connect = () => {
             }
 
             // Its position on the map is updated.
-            aircraft.css({
-                left: position.x - 20, // Half of the image width
-                top: position.y - 20 // Half of the image height
-            });
+            if (newAircraft) {
+                aircraft.css({
+                    left: position.x - 20, // Half of the image width
+                    top: position.y - 20 // Half of the image height
+                }, 1000);
+                aircraft.fadeIn();
+            } else {
+                aircraft.animate({
+                    left: position.x - 20, // Half of the image width
+                    top: position.y - 20 // Half of the image height
+                }, 1000);
+            }
             aircraft.children('img').css({
                 transform: 'rotate(' + (position.trackAngle - 90) + 'deg)'
             })
-            aircraft.show();
         }
     };
 };
