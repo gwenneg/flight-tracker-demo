@@ -19,7 +19,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 @ApplicationScoped
 @Path("/simulate")
-public class FlightResource {
+public class SimulatorService {
 
     @Inject
     @Channel("radar-data")
@@ -38,13 +38,13 @@ public class FlightResource {
     @Consumes(APPLICATION_JSON)
     public void simulateFlightData(PointToPointFlight flight) {
         if (movingAircrafts.containsKey(flight)) {
-            throw new BadRequestException("Aircraft is already flying");
+            throw new BadRequestException("Aircraft is already flying: " + flight.getAircraft());
         }
         FlightDataSimulator movingAircraft = new FlightDataSimulator(flight.getSource(), flight.getDeparture(), flight.getArrival(), flight.getSpeed());
         movingAircrafts.put(flight.getAircraft(), movingAircraft);
     }
 
-    @Scheduled(every = "PT0.5S")
+    @Scheduled(every = "1s")
     void emitFlightData() {
         for (Map.Entry<String, FlightDataSimulator> movingAircraft : movingAircrafts.entrySet()) {
             try {
