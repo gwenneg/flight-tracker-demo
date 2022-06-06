@@ -25,11 +25,7 @@ public class FlightResource {
 
     @Inject
     @RestClient
-    AdsbSourceClient adsbSourceClient;
-
-    @Inject
-    @RestClient
-    RadarSourceClient radarSourceClient;
+    DataSimulatorClient dataSimulatorClient;
 
     @PUT
     @Consumes(APPLICATION_JSON)
@@ -41,16 +37,8 @@ public class FlightResource {
                             .onItem().transformToUni(arrival -> {
                                 Point departurePoint = new Point(departure.getX(), departure.getY());
                                 Point arrivalPoint = new Point(arrival.getX(), arrival.getY());
-                                PointToPointFlight p2pFlight = new PointToPointFlight(departurePoint, arrivalPoint, flight.getAircraft(), flight.getSpeed());
-
-                                switch (flight.getSource()) {
-                                    case "radar":
-                                        return radarSourceClient.startFlight(p2pFlight);
-                                    case "transponder":
-                                        return adsbSourceClient.startFlight(p2pFlight);
-                                    default:
-                                        throw new BadRequestException("Unexpected source: " + flight.getSource());
-                                }
+                                PointToPointFlight p2pFlight = new PointToPointFlight(flight.getSource(), departurePoint, arrivalPoint, flight.getAircraft(), flight.getSpeed());
+                                return dataSimulatorClient.simulateFlightData(p2pFlight);
                             });
         });
     }

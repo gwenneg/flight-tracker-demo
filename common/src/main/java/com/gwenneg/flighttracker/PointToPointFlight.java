@@ -9,6 +9,7 @@ import lombok.ToString;
 @ToString
 public class PointToPointFlight {
 
+    private String source;
     private Point departure;
     private Point arrival;
     private String aircraft;

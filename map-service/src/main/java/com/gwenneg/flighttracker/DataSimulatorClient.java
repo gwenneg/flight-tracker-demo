@@ -9,11 +9,11 @@ import javax.ws.rs.Path;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
-@Path("/flight")
-@RegisterRestClient(configKey = "ads-b")
-public interface AdsbSourceClient {
+@Path("/simulate")
+@RegisterRestClient(configKey = "data-simulator")
+public interface DataSimulatorClient {
 
     @PUT
     @Consumes(APPLICATION_JSON)
-    Uni<Void> startFlight(PointToPointFlight pointToPointFlight);
+    Uni<Void> simulateFlightData(PointToPointFlight flight);
 }
