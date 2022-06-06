@@ -36,7 +36,7 @@ public class FlightResource {
 
     @PUT
     @Consumes(APPLICATION_JSON)
-    public void simulateTransponderData(PointToPointFlight flight) {
+    public void simulateFlightData(PointToPointFlight flight) {
         if (movingAircrafts.containsKey(flight)) {
             throw new BadRequestException("Aircraft is already flying");
         }
