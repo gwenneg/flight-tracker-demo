@@ -62,7 +62,6 @@ let connect = () => {
             let newAircraft = false;
             if (!aircraft.length) {
                 newAircraft = true;
-                console.error("creating aircraft" + position.aircraft);
                 // It is added to the map.
                 aircraft = $('#aircraft-pattern')
                     .clone()

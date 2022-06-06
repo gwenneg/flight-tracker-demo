@@ -32,60 +32,62 @@ public class SimulatorService {
     @Inject
     ObjectMapper objectMapper;
 
-    private final Map<String, FlightDataSimulator> movingAircrafts = new ConcurrentHashMap<>();
+    private final Map<String, Aircraft> aircrafts = new ConcurrentHashMap<>();
 
     @PUT
     @Consumes(APPLICATION_JSON)
     public void simulateFlightData(PointToPointFlight flight) {
-        if (movingAircrafts.containsKey(flight)) {
+        if (aircrafts.containsKey(flight)) {
             throw new BadRequestException("Aircraft is already flying: " + flight.getAircraft());
         }
-        FlightDataSimulator movingAircraft = new FlightDataSimulator(flight.getSource(), flight.getDeparture(), flight.getArrival(), flight.getSpeed());
-        movingAircrafts.put(flight.getAircraft(), movingAircraft);
+        Aircraft aircraft = new Aircraft(flight.getSource(), flight.getDeparture(), flight.getArrival(), flight.getSpeed());
+        aircrafts.put(flight.getAircraft(), aircraft);
     }
 
     @Scheduled(every = "1s")
     void emitFlightData() {
-        for (Map.Entry<String, FlightDataSimulator> movingAircraft : movingAircrafts.entrySet()) {
+        for (Map.Entry<String, Aircraft> aircraft : aircrafts.entrySet()) {
             try {
-                switch (movingAircraft.getValue().getSource()) {
+                switch (aircraft.getValue().getSource()) {
                     case "radar":
-                        RadarData radarData = buildRadarData(movingAircraft.getKey(), movingAircraft.getValue());
+                        RadarData radarData = buildRadarData(aircraft.getKey(), aircraft.getValue());
                         radarEmitter.send(objectMapper.writeValueAsString(radarData));
                         break;
                     case "transponder":
-                        TransponderData transponderData = buildTransponderData(movingAircraft.getKey(), movingAircraft.getValue());
+                        TransponderData transponderData = buildTransponderData(aircraft.getKey(), aircraft.getValue());
                         transponderEmitter.send(objectMapper.writeValueAsString(transponderData));
                         break;
                     default:
-                        throw new IllegalStateException("Unexpected data source: " + movingAircraft.getValue().getSource());
+                        throw new IllegalStateException("Unexpected data source: " + aircraft.getValue().getSource());
                 }
             } catch (JsonProcessingException e) {
                 throw new RuntimeException("Flight data serialization failed", e);
             }
         }
-        movingAircrafts.entrySet().removeIf(entry -> entry.getValue().isLanded());
+        aircrafts.entrySet().removeIf(entry -> entry.getValue().isLanded());
     }
 
-    private static RadarData buildRadarData(String aircraft, FlightDataSimulator flightEngine) {
+    private static RadarData buildRadarData(String identification, Aircraft aircraft) {
         RadarData data = new RadarData();
-        data.setAircraftIdentification(aircraft);
-        data.setX(flightEngine.getPosition().getX());
-        data.setY(flightEngine.getPosition().getY());
-        data.setTrackAngle(flightEngine.getTrackAngle());
-        data.setLanded(flightEngine.isLanded());
+        data.setAircraftIdentification(identification);
+        Point position = aircraft.getPosition();
+        data.setX(position.getX());
+        data.setY(position.getY());
+        data.setTrackAngle(aircraft.getTrackAngle());
+        data.setLanded(aircraft.isLanded());
         return data;
     }
 
-    private static TransponderData buildTransponderData(String aircraft, FlightDataSimulator flightDataSimulator) {
+    private static TransponderData buildTransponderData(String identification, Aircraft aircraft) {
         TransponderData data = new TransponderData();
-        data.setIdentification(aircraft);
+        data.setIdentification(identification);
+        Point position = aircraft.getPosition();
         data.setPosition(Map.of(
-                "x", flightDataSimulator.getPosition().getX(),
-                "y", flightDataSimulator.getPosition().getY()
+                "x", position.getX(),
+                "y", position.getY()
         ));
-        data.setTrackAngle(flightDataSimulator.getTrackAngle());
-        data.setLanded(flightDataSimulator.isLanded());
+        data.setTrackAngle(aircraft.getTrackAngle());
+        data.setLanded(aircraft.isLanded());
         return data;
     }
 }
