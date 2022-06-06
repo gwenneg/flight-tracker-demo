@@ -27,6 +27,9 @@ public class FlightResource {
     @RestClient
     DataSimulatorClient dataSimulatorClient;
 
+    @Inject
+    Mutiny.SessionFactory sessionFactory;
+
     @PUT
     @Consumes(APPLICATION_JSON)
     public Uni<Void> startFlight(@Valid Flight flight) {
@@ -42,9 +45,6 @@ public class FlightResource {
                             });
         });
     }
-
-    @Inject
-    Mutiny.SessionFactory sessionFactory;
 
     @GET
     @Produces(APPLICATION_JSON)
