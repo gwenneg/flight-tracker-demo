@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Getter
 @ToString
-public class Flight {
+public class AirportToAirportFlight {
 
     @NotNull
     private String aircraft;

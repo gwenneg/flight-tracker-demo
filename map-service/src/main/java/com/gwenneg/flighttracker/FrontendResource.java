@@ -8,7 +8,6 @@ import org.hibernate.reactive.mutiny.Mutiny;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import javax.validation.Valid;
-import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
@@ -20,8 +19,8 @@ import java.util.List;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
-@Path("/flight")
-public class FlightResource {
+@Path("/frontend")
+public class FrontendResource {
 
     @Inject
     @RestClient
@@ -31,22 +30,30 @@ public class FlightResource {
     Mutiny.SessionFactory sessionFactory;
 
     @PUT
+    @Path("/simulate")
     @Consumes(APPLICATION_JSON)
-    public Uni<Void> startFlight(@Valid Flight flight) {
+    public Uni<Void> startFlight(@Valid AirportToAirportFlight a2aFlight) {
         // TO SAY Show imperative code (panache orm) then transform it into reactive
-        return findAirport(flight.getDeparture())
+        return findAirport(a2aFlight.getDeparture())
                 .onItem().transformToUni(departure -> {
-                    return findAirport(flight.getArrival())
+                    return findAirport(a2aFlight.getArrival())
                             .onItem().transformToUni(arrival -> {
                                 Point departurePoint = new Point(departure.getX(), departure.getY());
                                 Point arrivalPoint = new Point(arrival.getX(), arrival.getY());
-                                PointToPointFlight p2pFlight = new PointToPointFlight(flight.getSource(), departurePoint, arrivalPoint, flight.getAircraft(), flight.getSpeed());
+                                PointToPointFlight p2pFlight = new PointToPointFlight(
+                                        a2aFlight.getSource(),
+                                        departurePoint,
+                                        arrivalPoint,
+                                        a2aFlight.getAircraft(),
+                                        a2aFlight.getSpeed()
+                                );
                                 return dataSimulatorClient.simulateFlightData(p2pFlight);
                             });
         });
     }
 
     @GET
+    @Path("/airports")
     @Produces(APPLICATION_JSON)
     @CacheResult(cacheName = "airports") // explain what happens when Uni
     public Uni<List<Airport>> getAirports() {
@@ -57,7 +64,8 @@ public class FlightResource {
         });
     }
 
-    private static Uni<Airport> findAirport(String code) {
+    @CacheResult(cacheName = "airports")
+    Uni<Airport> findAirport(String code) {
         try {
             return Airport.find("code", code).singleResult();
         } catch (NoResultException e) {

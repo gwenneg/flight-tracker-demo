@@ -11,8 +11,8 @@ import javax.persistence.Id;
 
 @Entity
 @Getter
-@ToString
 @EqualsAndHashCode
+@ToString
 public class Airport extends PanacheEntityBase {
 
     @Id

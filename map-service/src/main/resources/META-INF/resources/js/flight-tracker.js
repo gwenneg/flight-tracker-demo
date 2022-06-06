@@ -4,7 +4,7 @@
 let loadAirports = () => {
     $.ajax({
         dataType: "json",
-        url: "/flight",
+        url: "/frontend/airports",
         success: function(data) {
             data.forEach(airport => {
                 $('#departure').append($('<option>').text(airport.code));
@@ -83,7 +83,7 @@ let connect = () => {
 };
 $('#takeoff').click(() => {
     $.ajax({
-        url: '/flight',
+        url: '/frontend/simulate',
         type: 'PUT',
         contentType: 'application/json',
         data: JSON.stringify({
