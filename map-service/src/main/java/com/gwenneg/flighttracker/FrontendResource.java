@@ -33,7 +33,6 @@ public class FrontendResource {
     @Path("/simulate")
     @Consumes(APPLICATION_JSON)
     public Uni<Void> startFlight(@Valid AirportToAirportFlight a2aFlight) {
-        // TO SAY Show imperative code (panache orm) then transform it into reactive
         return findAirport(a2aFlight.getDeparture())
                 .onItem().transformToUni(departure -> {
                     return findAirport(a2aFlight.getArrival())
@@ -55,9 +54,8 @@ public class FrontendResource {
     @GET
     @Path("/airports")
     @Produces(APPLICATION_JSON)
-    @CacheResult(cacheName = "airports") // explain what happens when Uni
+    @CacheResult(cacheName = "airports")
     public Uni<List<Airport>> getAirports() {
-        // TO SAY: never share a session between threads
         return sessionFactory.withSession(session -> {
            return session.createQuery("FROM Airport", Airport.class)
                    .getResultList();
