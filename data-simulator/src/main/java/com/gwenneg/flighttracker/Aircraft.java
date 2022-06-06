@@ -37,7 +37,7 @@ public class Aircraft {
         double percentageDone = speed * SECONDS.between(startTime, LocalDateTime.now(UTC)) / distance;
         double currentX = departure.getX() + deltaX * percentageDone;
         double currentY = departure.getY() + deltaY * percentageDone;
-        if (percentageDone >= 1) {
+        if (percentageDone >= 1d) {
             landed = true;
             return new Point(arrival.getX(), arrival.getY());
         } else {
