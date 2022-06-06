@@ -2,9 +2,11 @@ package com.gwenneg.flighttracker;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 public class FlightData {
 
     public static final String RADAR_SOURCE = "radar";
