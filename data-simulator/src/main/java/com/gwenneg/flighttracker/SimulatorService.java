@@ -44,7 +44,7 @@ public class SimulatorService {
         aircrafts.put(flight.getAircraft(), aircraft);
     }
 
-    @Scheduled(every = "1s")
+    @Scheduled(every = "1s", delayed = "30s")
     void emitFlightData() {
         for (Map.Entry<String, Aircraft> aircraft : aircrafts.entrySet()) {
             try {
