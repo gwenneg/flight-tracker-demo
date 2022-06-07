@@ -22,6 +22,10 @@
             <artifactId>quarkus-scheduler</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-openshift</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.gwenneg</groupId>
             <artifactId>flight-tracker-common</artifactId>
             <version>${project.version}</version>
