@@ -40,7 +40,7 @@ public class SimulatorService {
         if (aircrafts.containsKey(flight.getAircraft())) {
             throw new BadRequestException("Aircraft is already flying: " + flight.getAircraft());
         }
-        Aircraft aircraft = new Aircraft(flight.getSource(), flight.getDeparture(), flight.getArrival(), flight.getSpeed());
+        Aircraft aircraft = Aircraft.fromPointToPointFlight(flight);
         aircrafts.put(flight.getAircraft(), aircraft);
     }
 

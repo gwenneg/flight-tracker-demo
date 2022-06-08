@@ -52,4 +52,8 @@ public class Aircraft {
     public boolean isLanded() {
         return landed;
     }
+
+    public static Aircraft fromPointToPointFlight(PointToPointFlight flight) {
+        return new Aircraft(flight.getSource(), flight.getDeparture(), flight.getArrival(), flight.getSpeed());
+    }
 }
