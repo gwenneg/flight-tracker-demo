@@ -1,6 +1,7 @@
 package com.gwenneg.flighttracker;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import static java.time.ZoneOffset.UTC;
 import static java.time.temporal.ChronoUnit.SECONDS;
@@ -51,6 +52,31 @@ public class Aircraft {
 
     public boolean isLanded() {
         return landed;
+    }
+
+    public RadarData toRadarData(String identification) {
+        RadarData data = new RadarData();
+        data.setAircraftIdentification(identification);
+        Point position = getPosition();
+        data.setX(position.getX());
+        data.setY(position.getY());
+        data.setTrackAngle(getTrackAngle());
+        data.setLanded(landed);
+        data.setRadarType("PSR");
+        return data;
+    }
+
+    public TransponderData toTransponderData(String identification) {
+        TransponderData data = new TransponderData();
+        data.setIdentification(identification);
+        Point position = getPosition();
+        data.setPosition(Map.of(
+                "x", position.getX(),
+                "y", position.getY()
+        ));
+        data.setTrackAngle(getTrackAngle());
+        data.setLanded(landed);
+        return data;
     }
 
     public static Aircraft fromPointToPointFlight(PointToPointFlight flight) {

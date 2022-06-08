@@ -50,11 +50,11 @@ public class SimulatorService {
             try {
                 switch (aircraft.getValue().getSource()) {
                     case "radar":
-                        RadarData radarData = buildRadarData(aircraft.getKey(), aircraft.getValue());
+                        RadarData radarData = aircraft.getValue().toRadarData(aircraft.getKey());
                         radarEmitter.send(objectMapper.writeValueAsString(radarData));
                         break;
                     case "transponder":
-                        TransponderData transponderData = buildTransponderData(aircraft.getKey(), aircraft.getValue());
+                        TransponderData transponderData = aircraft.getValue().toTransponderData(aircraft.getKey());
                         transponderEmitter.send(objectMapper.writeValueAsString(transponderData));
                         break;
                     default:
@@ -65,30 +65,5 @@ public class SimulatorService {
             }
         }
         aircrafts.entrySet().removeIf(entry -> entry.getValue().isLanded());
-    }
-
-    private static RadarData buildRadarData(String identification, Aircraft aircraft) {
-        RadarData data = new RadarData();
-        data.setAircraftIdentification(identification);
-        Point position = aircraft.getPosition();
-        data.setX(position.getX());
-        data.setY(position.getY());
-        data.setTrackAngle(aircraft.getTrackAngle());
-        data.setLanded(aircraft.isLanded());
-        data.setRadarType("PSR");
-        return data;
-    }
-
-    private static TransponderData buildTransponderData(String identification, Aircraft aircraft) {
-        TransponderData data = new TransponderData();
-        data.setIdentification(identification);
-        Point position = aircraft.getPosition();
-        data.setPosition(Map.of(
-                "x", position.getX(),
-                "y", position.getY()
-        ));
-        data.setTrackAngle(aircraft.getTrackAngle());
-        data.setLanded(aircraft.isLanded());
-        return data;
     }
 }
